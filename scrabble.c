@@ -131,14 +131,7 @@ int anagrams(char* letters, char** results){
 	char str_letters [1000][2];// base 1 letter words
 	char str_letters2 [100000][max_len+1];// z-1 length words, z is used later
 
-	//char*pt = letters;
 
-
-	// while(*pt!='\0'){
-	// 	*pt= tolower(*pt);
-	// 	pt++;
-	// }
-	// 		//letters[i] = tolower(letters[i]);
 	char l2[strlen(letters)+1];
 	for(int i =0; i< strlen(letters)+1;i++){
 		l2[i] = tolower(letters[i]);
@@ -152,9 +145,6 @@ int anagrams(char* letters, char** results){
 
 
 	for(int i = 0; i< max_len; i++){
-		// if(isalpha(letters[i])){
-		// 	letters[i] = tolower(letters[i]);
-		// }
 		
 		char temp[2];
 		temp[0] = tolower(letters[i]);
@@ -176,7 +166,7 @@ int anagrams(char* letters, char** results){
 		strcpy(results[res_ct], str_letters[i]);
 		res_ct++;
 
-		printf("%s==>%d\n", str_letters[i], res_ct-1);
+		//printf("%s==>%d\n", str_letters[i], res_ct-1);
 	}
 
 
@@ -202,8 +192,6 @@ int anagrams(char* letters, char** results){
 					strcat(temp_results[ct], str_letters[j]);
 
 
-	
-					//printf("og = %s , %d\n",temp_results[ct], ct);
 					ct++;
 								
 
@@ -231,7 +219,7 @@ int anagrams(char* letters, char** results){
 
 				results[res_ct] = malloc(1+strlen(temp_results[j])* sizeof(char));
 				strcpy(results[res_ct], temp_results[j]);
-				//printf("ans-%s==>%d\n", temp_results[j], res_ct);
+				
 				res_ct++;
 
 			}
@@ -302,7 +290,7 @@ void best_playable_words(char playable_results[1000][60], int playable_ct,struct
 
 
 }
-int my_read(char **dict){
+int my_read(char **dict){// reads the dictionary
 
 	FILE *ptr;
 	ptr = fopen("collins-words-2019.txt","r");
@@ -314,7 +302,7 @@ int my_read(char **dict){
 	
 	int dict_len = 0;
 
-	fgets(buffer, bufferLength, ptr);
+	fgets(buffer, bufferLength, ptr);// skip first 2 lines
 	fgets(buffer, bufferLength, ptr);
 
 
@@ -352,8 +340,6 @@ void my_test(char* words, char **dict, int dict_len ){
 	}
 
 
-	//char results[10000][60];
-
 	char ** results = malloc(1000000*sizeof(char*));
 
 	char playable_results[1000][60];
@@ -361,11 +347,11 @@ void my_test(char* words, char **dict, int dict_len ){
 
 	int res_ct = anagrams(words, results);
 
-	printf("rc = %d\n", res_ct);
+	//printf("rc = %d\n", res_ct);// the total order of letters count
 
 	int playable_ct = playable(results, playable_results, res_ct, dict, dict_len);
 
-	printf("pc = %d\n", playable_ct);
+	//printf("pc = %d\n", playable_ct);// the playable words count
 
 	best_playable_words(playable_results, playable_ct, pair_list);
 
@@ -376,7 +362,7 @@ void my_test(char* words, char **dict, int dict_len ){
 	free(results);
 }
 
-int main(){
+int main(){// requires there is a dictionary collins-words-2019.txt
 
 
 
@@ -389,16 +375,24 @@ int main(){
 	int dict_len = my_read(dict);
 
 
-	// my_test("abcd", dict, dict_len);
+	my_test("abcd", dict, dict_len);// the test is just slow, not infinite looped
+	printf("next: \n");
 
-	// my_test("aabs", dict, dict_len);
+	my_test("aabs", dict, dict_len);
+	printf("next: \n");
 
-	// my_test("aaaaaa", dict, dict_len);
-	// my_test("zzzzzz", dict, dict_len);
-	// my_test("hiiamjoe", dict, dict_len);
-	//my_test("cat,dog", dict, dict_len);
-	// my_test(" ", dict, dict_len);
-	// my_test("", dict, dict_len);
+	my_test("aaaaaa", dict, dict_len);
+	printf("next: \n");
+	my_test("zzzzzz", dict, dict_len);
+	printf("next: \n");
+	my_test("hiiamjoe", dict, dict_len);
+	printf("next: \n");
+	my_test("cat,dog", dict, dict_len);
+	printf("next: \n");
+	my_test(" ", dict, dict_len);
+	printf("next: \n");
+	my_test("", dict, dict_len);
+	printf("next: \n");
 
 	my_test("iatheJOE", dict, dict_len);
 
@@ -414,4 +408,37 @@ int main(){
 	
 
 }
+/*
+
+ (a) aspects of the specs that you disagreed with 
+
+ 	I disagree that playable is a bool so I asked her to chnage the return type to an int
+ 	I disagree with making global variables like dictionary, I asked her to make most globals local
+ 	I disagree with char** returns, because I dont need to return anything if i modify char**, 
+ 	I disagree that not enough argument are given in all functions, to make my life easier, I asked her to add parameters that reflects length
+ 	I dont know if char** for words is a good idea, but I asked her to use square brackets with appropriate sizes
+
+ 	I asked her to change the above
+
+ 	I disagree that anything should be global, 
+ 	I disagree that any function will ever return, I will use pointers
+ 	I disagree that chars like 8 or ! is 0 points, I believe that they will get the points in the scoreboard
+
+
+ 	b) approaches you would have taken instead. Keep this to about one page (or screen).
+
+ 	I would have all local variables
+ 	I would use add arguments as parameters to functions instead of return
+ 	I would use ints as bools, I dont think c has bools
+ 	I would even add more parameters sto make my code easier
+ 	I would add more conor cases like upper/lower letter
+ 	She did not mention memory at all, I would like that
+
+
+ 	Otherwise, I appreciate her specs, she did a great job and it was detailed.
+ 	She has some corner cases and I would like to add more
+
+
+*/
+
 
